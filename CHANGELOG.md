@@ -8,6 +8,10 @@ All notable changes to this project are documented in this file.
 
 - Add a search box to the model list: it opens focused, filters by provider, model name, model id, or description, clears with a button, and selects the first match on Enter. Enter that commits an IME composition never switches models.
 
+### Fixed
+
+- Keep the model and effort popover inside every clipping ancestor as well as the visual viewport, so its left edge (back chevron, search icon) is no longer cut off in narrow windows.
+
 ## [0.8.2] - 2026-10-18
 
 ### Changed
