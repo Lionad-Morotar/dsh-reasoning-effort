@@ -11,6 +11,7 @@ All notable changes to this project are documented in this file.
 ### Fixed
 
 - Keep the model and effort popover inside every clipping ancestor as well as the visual viewport, so its left edge (back chevron, search icon) is no longer cut off in narrow windows.
+- Ignore Enter in the search box while a model selection is already in flight, matching the disabled model buttons and preventing a second concurrent selection.
 
 ## [0.8.2] - 2026-10-18
 

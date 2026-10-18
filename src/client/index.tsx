@@ -1036,7 +1036,7 @@ function AdvancedModelSelect({
                     // model, otherwise Chinese/Japanese/Korean typing would
                     // instantly switch models mid-query.
                     if (event.nativeEvent.isComposing || event.keyCode === 229) return
-                    if (event.key !== 'Enter') return
+                    if (event.key !== 'Enter' || busy) return
                     const group = filteredGroups[0]
                     const first = group?.models[0]
                     if (first === undefined) return
