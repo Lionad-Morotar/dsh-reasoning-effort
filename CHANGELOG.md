@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Add a search box to the model list: it opens focused, filters by provider, model name, model id, or description, clears with a button, and selects the first match on Enter. Enter that commits an IME composition never switches models.
+
 ## [0.8.2] - 2026-10-18
 
 ### Changed

@@ -843,6 +843,7 @@ function AdvancedModelSelect({
   )
   const [open, setOpen] = useState(false)
   const [modelsOpen, setModelsOpen] = useState(false)
+  const [query, setQuery] = useState('')
   const revision = useSyncExternalStore(adapt?.subscribe ?? noGuidanceSubscription, adapt?.getSnapshot ?? noGuidanceRevision)
   const [guidanceResult, setGuidanceResult] = useState<{ value: AdaptGuidance; revision: number } | null>(null)
   const [guidanceBusy, setGuidanceBusy] = useState(false)
@@ -853,6 +854,7 @@ function AdvancedModelSelect({
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
   useLayoutEffect(() => {
     if (!open || rootRef.current === null || menuRef.current === null) return
     return positionModelMenu(rootRef.current, menuRef.current)
@@ -930,7 +932,28 @@ function AdvancedModelSelect({
     }
   }, [adapt, available, provider, modelId, revision])
 
+  // The model pane opens with an empty query and the search field focused, so a
+  // user with a long provider catalog can type immediately without reaching for
+  // the input first.
+  useEffect(() => {
+    if (!modelsOpen) return
+    setQuery('')
+    searchRef.current?.focus()
+  }, [modelsOpen])
+
   if (!available) return null
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const matchesQuery = (group: { id: string; name: string }, model: { id: string; name: string; description?: string }) =>
+    normalizedQuery === ''
+    || [group.name, group.id, model.name, model.id, model.description ?? ''].some((value) =>
+      value.toLowerCase().includes(normalizedQuery))
+  const filteredGroups = state.groups
+    .map((group) => ({
+      ...group,
+      models: group.models.filter((model) => matchesQuery(group, model)),
+    }))
+    .filter((group) => group.models.length > 0)
 
   const close = (restoreFocus = false) => {
     setOpen(false)
@@ -996,10 +1019,49 @@ function AdvancedModelSelect({
                 <span aria-hidden="true">‹</span>
                 <span>{t('model.select')}</span>
               </button>
+              <div className="re-model-search-row">
+                <span className="re-model-search-icon" aria-hidden="true" />
+                <input
+                  ref={searchRef}
+                  className="re-model-search"
+                  type="search"
+                  value={query}
+                  placeholder={t('model.search')}
+                  aria-label={t('model.search')}
+                  autoComplete="off"
+                  spellCheck={false}
+                  onChange={(event) => setQuery(event.target.value)}
+                  onKeyDown={(event) => {
+                    // Enter that commits an IME composition must not select a
+                    // model, otherwise Chinese/Japanese/Korean typing would
+                    // instantly switch models mid-query.
+                    if (event.nativeEvent.isComposing || event.keyCode === 229) return
+                    if (event.key !== 'Enter') return
+                    const group = filteredGroups[0]
+                    const first = group?.models[0]
+                    if (first === undefined) return
+                    event.preventDefault()
+                    void chooseModel(group.id, first.id, first.reasoning?.defaultEffort)
+                  }}
+                />
+                {query === '' ? null : (
+                  <button
+                    type="button"
+                    className="re-model-search-clear"
+                    aria-label={t('model.searchClear')}
+                    onClick={() => {
+                      setQuery('')
+                      searchRef.current?.focus()
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
               {state.status === 'loading' && state.groups.length === 0 ? (
                 <div className="re-model-status">{t('model.loading')}</div>
               ) : null}
-              {state.groups.map((group) => (
+              {filteredGroups.map((group) => (
                 <section key={group.id}>
                   <div className="re-model-group-title">{group.name}</div>
                   {group.models.map((model) => {
@@ -1026,8 +1088,10 @@ function AdvancedModelSelect({
                   })}
                 </section>
               ))}
-              {state.status === 'ready' && state.groups.every((group) => group.models.length === 0) ? (
-                <div className="re-model-status">{t('model.none')}</div>
+              {state.status === 'ready' && filteredGroups.length === 0 ? (
+                <div className="re-model-status">
+                  {normalizedQuery === '' ? t('model.none') : t('model.searchEmpty')}
+                </div>
               ) : null}
               {state.error === null ? null : <div className="re-model-error">{state.error}</div>}
             </div>

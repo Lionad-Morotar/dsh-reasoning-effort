@@ -337,6 +337,74 @@ export const CSS = `
   color: var(--dsw-alias-label-secondary, #686c75);
   font-size: 12px;
 }
+.re-model-search-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-sizing: border-box;
+  height: 30px;
+  margin: 2px 0 4px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: var(--dsw-alias-fill-tertiary, rgba(120,125,140,.09));
+  transition: box-shadow 120ms ease;
+}
+.re-model-search-row:focus-within {
+  box-shadow: inset 0 0 0 1.5px var(--dsw-alias-stroke-primary, rgba(77,112,255,.65));
+}
+.re-model-search-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border: 1.4px solid currentColor;
+  border-radius: 50%;
+  color: var(--dsw-alias-label-tertiary, #9296a0);
+  opacity: .9;
+}
+.re-model-search-icon::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 4px;
+  height: 1.4px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+.re-model-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+}
+.re-model-search::placeholder { color: var(--dsw-alias-label-tertiary, #9296a0); }
+.re-model-search::-webkit-search-cancel-button,
+.re-model-search::-webkit-search-decoration { appearance: none; display: none; }
+.re-model-search-clear {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--dsw-alias-label-secondary, #686c75);
+  background: var(--dsw-alias-fill-secondary, rgba(120,125,140,.16));
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.re-model-search-clear:hover { filter: brightness(.94); }
 .re-model-group-title { padding: 10px 9px 5px; color: var(--dsw-alias-label-tertiary, #9296a0); font-size: 11px; }
 .re-model-option {
   display: grid;

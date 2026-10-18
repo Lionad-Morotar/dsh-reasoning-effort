@@ -28,6 +28,9 @@ export declare const zh: {
     'model.menuAria': string;
     'model.loading': string;
     'model.none': string;
+    'model.search': string;
+    'model.searchClear': string;
+    'model.searchEmpty': string;
     'guidance.mismatch': string;
     'guidance.matched': string;
     'guidance.unmatched': string;
@@ -107,6 +110,9 @@ export declare const en: {
     'model.menuAria': string;
     'model.loading': string;
     'model.none': string;
+    'model.search': string;
+    'model.searchClear': string;
+    'model.searchEmpty': string;
     'guidance.mismatch': string;
     'guidance.matched': string;
     'guidance.unmatched': string;
